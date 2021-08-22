@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:latest
+    container_name: db
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports: 
+      - "5432:5432"
+  queue:
+    image: rabbitmq:latest
+    container_name: queue
+  app:
+    build: .
+    image: app:latest
+    container_name: app
+    volumes: 
+      - ./code:/code
+      - ./logs:/var/log/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - queue
